@@ -57,21 +57,3 @@ private fun logMeasurement(
         append(ns)
     }.let(::println)
 }
-
-fun fuck() {
-    val outputStream = System.out
-    val rowsValues = listOf(2, 4, 8, /*16, 32, 128, 256, 512, 1024, 2048, 4096, 8192*/)
-    val cols = 8192
-    for (rows in rowsValues) {
-        MatrixGenerator.GENERATOR_B.generateMatrix(rows, cols)
-            .joinToString("\n") {
-                it.contentToString()
-            }.let {
-                outputStream.write("$rows\n".toByteArray())
-                outputStream.write(it.toByteArray())
-                outputStream.write("\n".toByteArray())
-            }
-    }
-
-    exitProcess(0)
-}
