@@ -79,10 +79,10 @@ enum class MatrixSearch(
 
 fun LongArray.findLastLeq(
     target: Long,
-    startAt: Int
+    ceiling: Int
 ): Int {
     var currLeft = -1
-    var currRight = startAt
+    var currRight = ceiling
     while (currRight - currLeft > 1) {
         val middle = (currRight + currLeft) / 2
         if (this[middle] > target) {
