@@ -1,9 +1,11 @@
 package laba.search
 
+import kotlin.math.max
+
 enum class MatrixSearch(
-    val searchName: String
+    val tag: String
 ) {
-    LINEAR("Linear O(N+M)") {
+    LINEAR("Linear") {
         override fun find(
             target: Long,
             matrix: Array<LongArray>
@@ -23,7 +25,7 @@ enum class MatrixSearch(
             return false
         }
     },
-    BINARY_ON_ROWS("Binary on rows O(Mlog(N))") {
+    BINARY_ON_ROWS("Binary on rows") {
         override fun find(
             target: Long,
             matrix: Array<LongArray>
@@ -36,13 +38,13 @@ enum class MatrixSearch(
                 } else if (matrix[currRow][currCol] < target) {
                     currRow++
                 } else {
-                    currCol = matrix[currRow].findLastLeq(target, currCol)
+                    currCol = matrix[currRow].binarySearch(target, ceiling = currCol)
                 }
             }
             return false
         }
     },
-    EXPONENTIAL_ON_ROWS("Exponential on rows O(M(log(N) + log(M) + 1))") {
+    EXPONENTIAL_ON_ROWS("Exponential on rows") {
         override fun find(
             target: Long,
             matrix: Array<LongArray>
@@ -55,19 +57,7 @@ enum class MatrixSearch(
                 } else if (matrix[currRow][currCol] < target) {
                     currRow++
                 } else {
-                    var shift = 2
-                    if (currCol <= 32) {
-                        shift = 0
-                    } else {
-                        while (
-                            currCol >= shift &&
-                            matrix[currRow][currCol - shift] > target
-                        ) {
-                            shift *= 2
-                        }
-                        shift /= 2
-                    }
-                    currCol = matrix[currRow].findLastLeq(target, currCol - shift)
+                    currCol = matrix[currRow].exponentialSearch(currCol, target)
                 }
             }
             return false
@@ -80,19 +70,43 @@ enum class MatrixSearch(
     ): Boolean
 }
 
-fun LongArray.findLastLeq(
+fun LongArray.binarySearch(
     target: Long,
-    ceiling: Int
+    startAt: Int = 0,
+    ceiling: Int = lastIndex
 ): Int {
-    var currLeft = -1
-    var currRight = ceiling
-    while (currRight - currLeft > 1) {
-        val middle = (currRight + currLeft) / 2
-        if (this[middle] > target) {
-            currRight = middle
+    var left = startAt
+    var right = ceiling
+    while (right - left > 1) {
+        val middle = (right + left) / 2
+        val element = this[middle]
+        if (element == target) {
+            return middle
+        } else if (element < target) {
+            left = middle
         } else {
-            currLeft = middle
+            right = middle
         }
     }
-    return currRight - 1
+
+    return right - 1
+}
+
+fun LongArray.exponentialSearch(
+    currCol: Int,
+    target: Long
+): Int {
+    var shift = 1
+    do {
+        val i = max(currCol - shift, 0)
+        val element = this[i]
+        shift *= 2
+    } while (element > target);
+    shift /= 2
+
+    return binarySearch(
+        target,
+        startAt = currCol - shift,
+        ceiling = currCol - shift / 2
+    )
 }

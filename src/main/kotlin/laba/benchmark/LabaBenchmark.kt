@@ -3,8 +3,6 @@ package laba.benchmark
 import laba.generator.GetSearchTarget
 import laba.generator.MatrixGenerator
 import laba.search.MatrixSearch
-import java.io.File
-import kotlin.system.exitProcess
 import kotlin.system.measureNanoTime
 
 
@@ -32,7 +30,7 @@ fun main() = repeat(2) { run ->
     }
 }
 
-private const val REPS_FOR_AVERAGE_MEASUREMENT = 100
+private const val REPS_FOR_AVERAGE_MEASUREMENT = 1000
 
 private fun measureAvgNanoTime(computation: () -> Unit): Int {
     val measurements = LongArray(REPS_FOR_AVERAGE_MEASUREMENT) {
@@ -50,9 +48,9 @@ private fun logMeasurement(
     ns: Int
 ) {
     buildString {
-        append("${generator.generatorName}\t")
-        append("${getSearchTarget.strategyName}\t")
-        append("${matrixSearch.searchName}\t")
+        append("${generator.tag}\t")
+        append("${getSearchTarget.tag}\t")
+        append("${matrixSearch.tag}\t")
         append("$rows\t")
         append(ns)
     }.let(::println)

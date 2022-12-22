@@ -1,6 +1,6 @@
 package laba.generator
 enum class MatrixGenerator(
-    val generatorName: String,
+    val tag: String,
     val getSearchTarget: GetSearchTarget
 ) {
     GENERATOR_A("Generator A", GetSearchTarget.STRATEGY_2N_PLUS_1) {
@@ -29,7 +29,7 @@ enum class MatrixGenerator(
 }
 
 enum class GetSearchTarget(
-    val strategyName: String
+    val tag: String
 ) {
     STRATEGY_2N_PLUS_1("2N + 1") {
         override operator fun invoke(n: Int): Long {
