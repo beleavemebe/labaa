@@ -33,9 +33,10 @@ enum class MatrixSearch(
             var currRow = 0
             var currCol = matrix[0].size - 1
             while (currRow < matrix.size && currCol > -1) {
-                if (matrix[currRow][currCol] == target) {
+                val element = matrix[currRow][currCol]
+                if (element == target) {
                     return true
-                } else if (matrix[currRow][currCol] < target) {
+                } else if (element < target) {
                     currRow++
                 } else {
                     currCol = matrix[currRow].binarySearch(target, ceiling = currCol)
@@ -52,9 +53,10 @@ enum class MatrixSearch(
             var currRow = 0
             var currCol = matrix[0].size - 1
             while (currRow < matrix.size && currCol > -1) {
-                if (matrix[currRow][currCol] == target) {
+                val element = matrix[currRow][currCol]
+                if (element == target) {
                     return true
-                } else if (matrix[currRow][currCol] < target) {
+                } else if (element < target) {
                     currRow++
                 } else {
                     currCol = matrix[currRow].exponentialSearch(currCol, target)
