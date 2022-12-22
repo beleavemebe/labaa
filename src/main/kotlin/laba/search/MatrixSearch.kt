@@ -55,16 +55,19 @@ enum class MatrixSearch(
                 } else if (matrix[currRow][currCol] < target) {
                     currRow++
                 } else {
-                    var expFactor = 2
-                    if (currCol > 32) {
-                        while (currCol >= expFactor && matrix[currRow][currCol - expFactor] > target) {
-                            expFactor *= 2
-                        }
-                        expFactor /= 2
+                    var shift = 2
+                    if (currCol <= 32) {
+                        shift = 0
                     } else {
-                        expFactor = 0
+                        while (
+                            currCol >= shift &&
+                            matrix[currRow][currCol - shift] > target
+                        ) {
+                            shift *= 2
+                        }
+                        shift /= 2
                     }
-                    currCol = matrix[currRow].findLastLeq(target, currCol - expFactor)
+                    currCol = matrix[currRow].findLastLeq(target, currCol - shift)
                 }
             }
             return false
