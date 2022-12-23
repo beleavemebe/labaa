@@ -5,12 +5,12 @@ enum class MatrixGenerator(
 ) {
     GENERATOR_A("Generator A", GetSearchTarget.STRATEGY_2N_PLUS_1) {
         override fun calcElement(cols: Int, rows: Int, row: Int, col: Int): Long {
-            return 2L * (cols / rows * row + col)
+            return 2L * (cols * row / rows + col)
         }
     },
     GENERATOR_B("Generator B", GetSearchTarget.STRATEGY_16N_PLUS_1) {
         override fun calcElement(cols: Int, rows: Int, row: Int, col: Int): Long {
-            return 2L * (cols / rows * row * col)
+            return 2L * (cols * row * col / rows)
         }
     };
 
