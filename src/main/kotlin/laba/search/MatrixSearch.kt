@@ -5,7 +5,7 @@ import kotlin.math.max
 enum class MatrixSearch(
     val tag: String
 ) {
-    LINEAR("Linear") {
+    LADDER("Ladder") {
         override fun find(
             target: Long,
             matrix: Array<LongArray>
@@ -30,22 +30,16 @@ enum class MatrixSearch(
             target: Long,
             matrix: Array<LongArray>
         ): Boolean {
-            var currRow = 0
-            var currCol = matrix[0].size - 1
-            while (currRow < matrix.size && currCol > -1) {
-                val element = matrix[currRow][currCol]
-                if (element == target) {
+            for (row in matrix) {
+                val isFound = row.binarySearch(target) != -1
+                if (isFound) {
                     return true
-                } else if (element < target) {
-                    currRow++
-                } else {
-                    currCol = matrix[currRow].binarySearch(target, ceiling = currCol)
                 }
             }
             return false
         }
     },
-    EXPONENTIAL_ON_ROWS("Exponential on rows") {
+    EXPONENTIAL_LADDER("Exponential ladder") {
         override fun find(
             target: Long,
             matrix: Array<LongArray>
@@ -59,7 +53,7 @@ enum class MatrixSearch(
                 } else if (element < target) {
                     currRow++
                 } else {
-                    currCol = matrix[currRow].exponentialSearch(currCol, target)
+                    currCol = matrix[currRow].exponentialSearch(target, currCol)
                 }
             }
             return false
@@ -74,41 +68,45 @@ enum class MatrixSearch(
 
 fun LongArray.binarySearch(
     target: Long,
-    startAt: Int = 0,
-    ceiling: Int = lastIndex
+    left: Int = 0,
+    right: Int = lastIndex,
+    returnFinalIndex: Boolean = false,
 ): Int {
-    var left = startAt
-    var right = ceiling
-    while (right - left > 1) {
-        val middle = (right + left) / 2
-        val element = this[middle]
-        if (element == target) {
-            return middle
-        } else if (element < target) {
-            left = middle
-        } else {
-            right = middle
-        }
+    val middle = (right + left) / 2
+    val element = this[middle]
+    return if (left > right) {
+        if (returnFinalIndex) left - 1 else -1
+    } else if (target == element) {
+        middle
+    } else if (target < element) {
+        binarySearch(target, left, middle - 1, returnFinalIndex)
+    } else {
+        binarySearch(target, middle + 1, right, returnFinalIndex)
     }
+}
 
-    return right - 1
+private fun LongArray.exponentialSearch(
+    target: Long,
+    start: Int,
+    end: Int,
+    shift: Int = 2
+): Int {
+    val i = max(end - shift, start)
+    val element = this[i]
+    return if (element == target) {
+        i
+    } else if (element < target || i == start) {
+        binarySearch(target, i, end, true)
+    } else {
+        exponentialSearch(target, start, i, shift * 2)
+    }
 }
 
 fun LongArray.exponentialSearch(
-    currCol: Int,
-    target: Long
-): Int {
-    var shift = 1
-    do {
-        val i = max(currCol - shift, 0)
-        val element = this[i]
-        shift *= 2
-    } while (element > target);
-    shift /= 2
-
-    return binarySearch(
-        target,
-        startAt = currCol - shift,
-        ceiling = currCol - shift / 2
-    )
-}
+    target: Long,
+    currCol: Int
+): Int = exponentialSearch(
+    target = target,
+    start = 0,
+    end = currCol
+)

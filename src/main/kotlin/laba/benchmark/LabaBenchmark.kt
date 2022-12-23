@@ -6,7 +6,11 @@ import laba.search.MatrixSearch
 import kotlin.system.measureNanoTime
 
 
-fun main() = repeat(2) { run ->
+fun main() {
+    runBenchmark()
+}
+
+fun runBenchmark() = repeat(2) { run ->
     val isWarmupRun = run == 0
     val generators = MatrixGenerator.values()
     val matrixSearches = MatrixSearch.values()
