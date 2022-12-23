@@ -4,25 +4,25 @@ enum class MatrixGenerator(
     val getSearchTarget: GetSearchTarget
 ) {
     GENERATOR_A("Generator A", GetSearchTarget.STRATEGY_2N_PLUS_1) {
-        override fun calcElement(cols: Int, rows: Int, row: Int, col: Int): Long {
-            return 2L * (cols * row / rows + col)
+        override fun calcElement(n: Int, m: Int, i: Int, j: Int): Long {
+            return 2L * (n / m * i + j)
         }
     },
     GENERATOR_B("Generator B", GetSearchTarget.STRATEGY_16N_PLUS_1) {
-        override fun calcElement(cols: Int, rows: Int, row: Int, col: Int): Long {
-            return 2L * (cols * row * col / rows)
+        override fun calcElement(n: Int, m: Int, i: Int, j: Int): Long {
+            return 2L * (n / m * i * j)
         }
     };
 
-    protected abstract fun calcElement(cols: Int, rows: Int, row: Int, col: Int): Long
+    abstract fun calcElement(n: Int, m: Int, i: Int, j: Int): Long
 
     fun generateMatrix(
         rows: Int,
         cols: Int,
     ): Array<LongArray> {
-        return Array(rows) { row ->
-            LongArray(cols) { col ->
-                calcElement(cols, rows, row, col)
+        return Array(rows) { i ->
+            LongArray(cols) { j ->
+                calcElement(n = cols, m = rows, i, j)
             }
         }
     }
