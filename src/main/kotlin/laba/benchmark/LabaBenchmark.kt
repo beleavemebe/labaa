@@ -1,6 +1,5 @@
 package laba.benchmark
 
-import laba.generator.GetSearchTarget
 import laba.generator.MatrixGenerator
 import laba.search.MatrixSearch
 import kotlin.system.measureNanoTime
@@ -26,7 +25,7 @@ fun runBenchmark() = repeat(2) { run ->
                     matrixSearch.find(searchTarget, matrix)
                 }.let { ns ->
                     if (!isWarmupRun) {
-                        logMeasurement(generator, generator.getSearchTarget, matrixSearch, rows, ns)
+                        logMeasurement(generator, generator.searchStrategyTag, matrixSearch, rows, ns)
                     }
                 }
             }
@@ -46,14 +45,14 @@ private fun measureAvgNanoTime(computation: () -> Unit): Int {
 
 private fun logMeasurement(
     generator: MatrixGenerator,
-    getSearchTarget: GetSearchTarget,
+    searchStrategyTag: String,
     matrixSearch: MatrixSearch,
     rows: Int,
     ns: Int
 ) {
     buildString {
         append("${generator.tag}\t")
-        append("${getSearchTarget.tag}\t")
+        append("${searchStrategyTag}\t")
         append("${matrixSearch.tag}\t")
         append("$rows\t")
         append(ns)

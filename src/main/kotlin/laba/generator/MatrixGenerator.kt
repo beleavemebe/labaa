@@ -1,20 +1,29 @@
 package laba.generator
 enum class MatrixGenerator(
     val tag: String,
-    val getSearchTarget: GetSearchTarget
+    val searchStrategyTag: String,
 ) {
-    GENERATOR_A("Generator A", GetSearchTarget.STRATEGY_2N_PLUS_1) {
+    GENERATOR_A("Generator A", "2N + 1") {
         override fun calcElement(n: Int, m: Int, i: Int, j: Int): Long {
             return 2L * (n / m * i + j)
         }
+
+        override fun getSearchTarget(n: Int): Long {
+            return 2L * n + 1
+        }
     },
-    GENERATOR_B("Generator B", GetSearchTarget.STRATEGY_16N_PLUS_1) {
+    GENERATOR_B("Generator B", "16N + 1") {
         override fun calcElement(n: Int, m: Int, i: Int, j: Int): Long {
             return 2L * (n / m * i * j)
+        }
+
+        override fun getSearchTarget(n: Int): Long {
+            return 16L * n + 1
         }
     };
 
     abstract fun calcElement(n: Int, m: Int, i: Int, j: Int): Long
+    abstract fun getSearchTarget(n: Int): Long
 
     fun generateMatrix(
         rows: Int,
@@ -26,21 +35,4 @@ enum class MatrixGenerator(
             }
         }
     }
-}
-
-enum class GetSearchTarget(
-    val tag: String
-) {
-    STRATEGY_2N_PLUS_1("2N + 1") {
-        override operator fun invoke(n: Int): Long {
-            return 2L * n + 1
-        }
-    },
-    STRATEGY_16N_PLUS_1("16N + 1") {
-        override operator fun invoke(n: Int): Long {
-            return 16L * n + 1
-        }
-    };
-
-    abstract operator fun invoke(n: Int): Long
 }

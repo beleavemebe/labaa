@@ -53,7 +53,7 @@ enum class MatrixSearch(
                 } else if (element < target) {
                     currRow++
                 } else {
-                    currCol = matrix[currRow].exponentialSearch(target, currCol)
+                    currCol = matrix[currRow].exponentialSearch(target, end = currCol)
                 }
             }
             return false
@@ -66,7 +66,7 @@ enum class MatrixSearch(
     ): Boolean
 }
 
-fun LongArray.binarySearch(
+tailrec fun LongArray.binarySearch(
     target: Long,
     left: Int = 0,
     right: Int = lastIndex,
@@ -85,10 +85,10 @@ fun LongArray.binarySearch(
     }
 }
 
-private fun LongArray.exponentialSearch(
+tailrec fun LongArray.exponentialSearch(
     target: Long,
-    start: Int,
-    end: Int,
+    start: Int = 0,
+    end: Int = lastIndex,
     shift: Int = 2
 ): Int {
     val i = max(end - shift, start)
@@ -101,12 +101,3 @@ private fun LongArray.exponentialSearch(
         exponentialSearch(target, start, i, shift * 2)
     }
 }
-
-fun LongArray.exponentialSearch(
-    target: Long,
-    currCol: Int
-): Int = exponentialSearch(
-    target = target,
-    start = 0,
-    end = currCol
-)
